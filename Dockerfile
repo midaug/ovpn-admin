@@ -1,6 +1,6 @@
 FROM node:16.13.0-alpine3.12 AS frontend-builder
 COPY frontend/ /app
-RUN apk add --update python3 py3-pip make && \
+RUN apk add --update python3 py3-pip gcc g++ make cmake gfortran libffi-dev openssl-dev libtool && \
     rm -rf /tmp/* /var/tmp/* /var/cache/apk/* /var/cache/distfiles/*
 RUN cd /app && npm install && npm run build
 
