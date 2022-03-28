@@ -1,0 +1,45 @@
+name: docker_build_push
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:   
+        required: true
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: midaug/ovpn-admin:latest,midaug/ovpn-admin:${{ github.event.inputs.tag }}
+      - name: Build and push openvpn
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          dockerfile: Dockerfile.openvpn
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: midaug/ovpn-admin:openvpn-latest,midaug/ovpn-admin:openvpn-${{ github.event.inputs.tag }}          
