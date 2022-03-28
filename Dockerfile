@@ -1,5 +1,7 @@
 FROM node:16.13.0-alpine3.12 AS frontend-builder
 COPY frontend/ /app
+RUN apk add --update python && \
+    rm -rf /tmp/* /var/tmp/* /var/cache/apk/* /var/cache/distfiles/*
 RUN cd /app && npm install && npm run build
 
 FROM golang:1.17.3-buster AS backend-builder
