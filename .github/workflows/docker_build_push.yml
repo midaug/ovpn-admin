@@ -40,6 +40,6 @@ jobs:
         with:
           context: ./
           dockerfile: Dockerfile.openvpn
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
           tags: midaug/ovpn-admin:openvpn-latest,midaug/ovpn-admin:openvpn-${{ github.event.inputs.tag }}          
